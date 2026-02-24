@@ -5,16 +5,22 @@ import pyautogui
 import os
 from gtts import gTTS
 import pygame
+import asyncio
+import edge_tts
+
+async def _generate_audio(text, voice, filename):
+    communicate = edge_tts.Communicate(text, voice)
+    await communicate.save(filename)
 
 def speak(text):
-    """Генерація голосу з тексту"""
-    print(f"Ассистент: {text}")
-    try:
-        tts = gTTS(text=text, lang='uk')
-        filename = "response.mp3"
-        tts.save(filename)
+    """Генерація нейромережевого голосу з тексту"""
+    print(f"Асистент: {text}")
 
-        #ініціалізація мікшеру
+    voice = "uk-UA-OstapNeural"
+    filename = "response.mp3"
+
+    try:
+        asyncio.run(_generate_audio(text, voice, filename))
         pygame.mixer.init()
         pygame.mixer.music.load(filename)
         pygame.mixer.music.play()
