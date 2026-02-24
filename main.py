@@ -1,12 +1,10 @@
 import speech_recognition as sr
-import webbrowser
-import time 
-import pyautogui
 import os
 from gtts import gTTS
 import pygame
 import asyncio
 import edge_tts
+from mapping import COMMANDS_MAP
 
 async def _generate_audio(text, voice, filename):
     communicate = edge_tts.Communicate(text, voice)
@@ -57,19 +55,16 @@ def execute_command(command):
     if not command:
         return True
     
-    if "музик" in command or "ютуб" in command:
-        speak("Вмикаю музику на ютубі. Приємно прослуховування!")
-        webbrowser.open("https://music.youtube.com/")
-        time.sleep(6)
-        pyautogui.press('space')
-    elif "погод" in command:
-        speak("Відкриваю сайт з прогнозом погоди")
-        webbrowser.open("https://sinoptik.ua/")
-    elif "до побачення" in command or "вимкнись" in command or "відпоч" in command:
-        speak("Завершую роботую. До зустрічі!")
+    if "до побачення" in command or "вимкнись" in command or "можеш відпоч" in command:
+        speak("Завершую роботу. До зустрічі!")
         return False
-    else:
-        speak("Я почув вашу команду але ще не вмію її оброблювати")
+
+    # Пошук ключових слів у словнику
+    for keyword, func in COMMANDS_MAP.items():
+        if keyword in command:
+            func(speak)
+            return True
+    speak("Я почув команду, але ще не вмію її виконувати")
     return True
 
 def main():
