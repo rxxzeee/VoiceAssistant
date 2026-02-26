@@ -5,6 +5,7 @@ import pygame
 import asyncio
 import edge_tts
 from mapping import COMMANDS_MAP
+from skills import talk_cmds
 
 async def _generate_audio(text, voice, filename):
     communicate = edge_tts.Communicate(text, voice)
@@ -68,7 +69,7 @@ def execute_command(command):
     return True
 
 def main():
-    speak("До ваших послуг готовий!")
+    speak(talk_cmds.helloe)
     running = True
 
     while running:
